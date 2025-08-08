@@ -2,24 +2,12 @@ import puppeteer from "puppeteer";
 import client from "../../Redis/client.js";
 import User from "../models/user.model.js";
 
-export const setUsername = async (req, res) => {
-    try {
-        const {username, id} = req.body
-        if(!username) {
-            return res.status(404).json({message : "Username not Found"})
-        }
-        if(!id) {
-            return res.status(404).json({message : "User not found"})
-        }
-        const user = await User.updateOne(
-            {_id : id},
-            {$set : {gfg_username : username}}
-        )
-    } catch (error) {
-        console.log("Error while setting gfg username")
-        return res.status(500).json({message : "Internal server error"})
-    }
-}
+const browser = await puppeteer.launch({
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"]
+});
+
+
 
 export const gfgUserDetails = async (req, res) => {
     try {
@@ -28,14 +16,18 @@ export const gfgUserDetails = async (req, res) => {
             return res.status(400).json({ message: "Username is required" });
         }
 
-        // const cacheData = await client.get(`gfg:${username}`);
-        // if (cacheData) {
-        //     return res.status(200).json(JSON.parse(cacheData));
-        // }
+        const cacheData = await client.get(`gfg:${username}`);
+        if (cacheData) {
+            return res.status(200).json(JSON.parse(cacheData));
+        }
 
         await client.del(`gfg:${username}`);
 
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+            headless: true
+        });
         const page = await browser.newPage();
         const profileUrl = `https://auth.geeksforgeeks.org/user/${username}`;
 
@@ -80,15 +72,15 @@ export const gfgUserDetails = async (req, res) => {
         hardLevel = await problemStatusElement[4].evaluate(el => el.textContent.trim())
         const hardLevelNumber = hardLevel.match(/\d+/)[0];
         const hard = parseInt(hardLevelNumber, 10);
-
-        contestRating = await contestElement[0].evaluate(el => el.textContent.trim())
-        contestLevel = await contestElement[1].evaluate(el => el.textContent.trim())    
-        contestRank = await contestElement[2].evaluate(el => el.textContent.trim())
-        contestAtt = await contestElement[3].evaluate(el => el.textContent.trim())
         
+        console.log(contestElement[0])
+
+        contestRating = contestElement[0] ? await contestElement[0].evaluate(el => el.textContent.trim()) : contestRating;
+        contestLevel = contestElement[1] ? await contestElement[1].evaluate(el => el.textContent.trim()) : contestLevel;
+        contestRank = contestElement[2] ? await contestElement[2].evaluate(el => el.textContent.trim()) : contestRank;
+        contestAtt = contestElement[3] ? await contestElement[3].evaluate(el => el.textContent.trim()) : contestAtt;
 
         const languageUsed = await languageElement.evaluate(el => el.textContent.trim());
-
 
         await browser.close();
 

@@ -12,7 +12,7 @@ dotenv.config()
 
 const app = express()
 app.use(cors({
-    origin : "http://localhost:5173",
+    origin : "http://localhost:3000",
     credentials: true
 }))
 app.use(express.json())
@@ -22,7 +22,7 @@ app.use('/api/user', userRoutes)
 app.use('/api/leetcode', leetcodeRoutes)
 app.use('/api/gfg', gfgRoutes)
 
-app.listen(process.env.PORT, ()=>{
-    console.log('server running on port', process.env.PORT)
+app.listen(5000, '0.0.0.0', ()=>{
+    console.log('server running on port', 5000)
     connectDB()
 })

@@ -35,6 +35,8 @@ export const userDetails = async (req, res) => {
         return res.status(200).json(JSON.parse(cacheData))
     }
 
+    // bUvCpe74Ki1fphvz
+
     const query = {
         query : `
         {

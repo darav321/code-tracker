@@ -7,7 +7,7 @@ import client from "../../Redis/client.js"
 
 export const registerUser = async (req, res) => {
     try {
-        const {name, email, password} = req.body
+        const {name, email, password, leetcode_username, gfg_username} = req.body
 
         if(!name || !email || !password) {
             return res.status(400).json({message : "All fields are required"})
@@ -31,7 +31,7 @@ export const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hashedPass = await bcrypt.hash(password, salt)
 
-        const newUser = new User({name, email, password:hashedPass})
+        const newUser = new User({name, email, password:hashedPass, leetcode_username, gfg_username})
         await newUser.save()
 
         res.status(200).json({message : "User registered successfully"})
@@ -75,7 +75,7 @@ export const loginUser = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000, 
             }
 
-        res.status(200).cookie('token', token, cookieOptions).json({message : "Login Successfull", token:token})
+        res.status(200).cookie('token', token, cookieOptions).json({message : "Login Successfull", token:token, id: useremail._id})
     } catch (error) {
         console.log("Error while signing in the User", error)
         res.status(500).json({message : "Internal server error"})
@@ -87,7 +87,7 @@ export const userDetails = async (req, res) => {
         const token = req.cookies.token
         console.log(token)
         if(!token) {
-            return res.status(401).json({message : 'Seesion-out', logOut : true})
+            return res.status(401).json({message : 'Sesion-out', logOut : true})
         }
         console.log(token)
         const user = await userDetailsFromToken(token)
@@ -115,25 +115,3 @@ export const logOut = async (req, res) => {
         res.status(500).json({message : "Internal Server Error"})
     }
 }
-
-export const updateUsernames = async (req, res) => {
-    try {
-        const {id, leetcode, gfg} = req.body
-
-        if(!id) {
-            return res.status(400).json({message : "Userid is required"})
-        }
-
-        const user = await User.findByIdAndUpdate(id, {$set : {leetcode_username : leetcode, gfg_username : gfg}}, {new : true})
-
-        if(!user) {
-            res.status(404).json({message : "User not found"})
-        }
-
-        res.status(200).json({message : "user data updated successfully", dta : user})
-    } catch (error) {
-        console.log("Error while updating usernames of user")
-        res.status(500).json({message : "Internal server error"})
-    }
-}
-
