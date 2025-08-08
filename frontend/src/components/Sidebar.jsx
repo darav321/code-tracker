@@ -34,7 +34,7 @@ const Sidebar = () => {
           {/* Logo */}
           <div className="w-full flex items-center justify-center gap-3 pt-10">
             <img src={titleImg} alt="title icon" className="w-10" />
-            <p className="text-2xl font-bold">CodeTrack</p>
+            <p className="text-2xl font-bold">CodeTracker</p>
           </div>
 
           {/* Divider */}
