@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  frontend:
+    
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - code-tracker-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000" 
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MONGODB_URL=mongodb://varadkale20:bUvCpe74Ki1fphvz@cluster0-shard-00-00.6ub2y.mongodb.net:27017,cluster0-shard-00-01.6ub2y.mongodb.net:27017,cluster0-shard-00-02.6ub2y.mongodb.net:27017/?ssl=true&replicaSet=atlas-oj0z15-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0
+      - SECRET_KEY=abfhbauhl8g79anbijna75i9qjt8ubbajnt9qbip93b
+    depends_on:
+      - redis
+    networks:
+      - code-tracker-net
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - code-tracker-net
+
+networks:
+  code-tracker-net:
+    driver: bridge
