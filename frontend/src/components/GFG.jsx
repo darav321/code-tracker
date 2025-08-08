@@ -86,6 +86,8 @@ const GFG = () => {
             Problems Solved <span className="text-slate-600">(Level wise)</span>
           </h1>
           <Bar
+            width={590}
+            height={470}
             data={{
               labels: ["Easy", "Basic", "Medium", "Hard"],
               datasets: [

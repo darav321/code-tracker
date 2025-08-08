@@ -122,7 +122,7 @@ const Leetcode = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row gap-2 items-center w-full mt-4">
+          <div className="flex flex-col lg:flex-row gap-3 items-center w-full mt-4">
             <div className="lg:w-[48%] lg:h-[370px] w-full bg-white shadow-lg rounded-lg px-3">
               <h1 className="text-2xl font-semibold my-3 ">
                 Language specific Problem count :
@@ -142,6 +142,8 @@ const Leetcode = () => {
                         "rgba(0, 226, 255, 1)",
                         "rgba(0, 255, 0, 1)",
                         "rgba(255, 188, 0, 1)",
+                        "rgba(123, 45, 220, 0.75)",
+                        "rgba(34, 170, 85, 0.6)"
                       ],
                       borderRadius: 5,
                     },
@@ -174,58 +176,65 @@ const Leetcode = () => {
               />
             </div>
             <div className="lg:w-[48%] lg:h-[370px] w-full bg-white shadow-xl rounded-lg px-4 py-1">
-              <h1 className="text-2xl font-medium my-3">
+              <h1 className="text-2xl font-semibold my-3 mt-2">
                 Difficulty wise solved problems:
               </h1>
-              <Bar
-                data={{
-                  labels: problems.map((item, index) => item.difficulty),
-                  datasets: [
-                    {
-                      label: "Count",
-                      data: problems.map((item, index) => item.count),
-                      backgroundColor: [
-                        "rgba(0, 226, 255, 1)",
-                        "rgba(0, 255, 0, 1)",
-                        "rgba(255, 188, 0, 1)",
-                        "rgba(255, 0, 62, 1)",
-                      ],
-                      borderRadius: 5,
-                    },
-                  ],
-                }}
-              />
+                <Bar
+                  width={500}
+                  height={230}
+                  data={{
+                    labels: problems.map((item, index) => item.difficulty),
+                    datasets: [
+                      {
+                        label: "Count",
+                        data: problems.map((item, index) => item.count),
+                        backgroundColor: [
+                          "rgba(0, 226, 255, 1)",
+                          "rgba(0, 255, 0, 1)",
+                          "rgba(255, 188, 0, 1)",
+                          "rgba(255, 0, 62, 1)",
+                        ],
+                        borderRadius: 5,
+                      },
+                    ],
+                  }}
+                />
             </div>
           </div>
           <div className="lg:w-[48%] w-full mt-3 h-96 p-4 bg-white rounded-lg shadow-lg">
             <h1 className="text-2xl font-semibold mb-2">Contest Ranking</h1>
             <p className="text-sm text-slate-600 font-medium">
-              Attended Contest :
+              Attended Contest : {" "}
               <span className="font-bold text-slate-800">
                 {attendedContestsCount}
               </span>
             </p>
             <p className="text-sm text-slate-600 font-medium mb-2">
-              Better than{" "}
+              Better than {" "}
               <span className="font-bold text-slate-800">
                 {percentileRank.toFixed(2)}%
-              </span>{" "}
-              of participants.
+              </span>
+              {" "}of participants.
             </p>
-            <div className="w-full h-[85%] p-5">
-              <Bar data={chartData} options={chartOptions} />
+            <div className="w-full p-5">
+              <Bar 
+                width={500}
+                height={250}
+                data={chartData} 
+                options={chartOptions} 
+              />
             </div>
           </div>
           <div className="lg:w-[48%] w-full mt-3 h-64 p-4 bg-white rounded-lg shadow-lg">
             <h1 className="text-2xl font-semibold mb-2">Badges</h1>
             <p className="font-medium text-sm text-slate-500 mb-3">
-              Total badges :{" "}
+              Total badges :
               <span className="font-bold text-black">{badges.length}</span>
             </p>
-            <div className="flex flex-row gap-2 items-center justify-center">
+            <div className="flex flex-row gap-10 items-center w-full justify-center">
               {badges.map((item, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  <img src={item.icon} alt="" />
+                  <img src={item.icon} height={100} width={100} alt=""/>
                   <p className="font-medium text-sm pl-2">{item.hoverText}</p>
                   <p className="text-gray-400 text-xs font-medium">
                     Id: {item.id}

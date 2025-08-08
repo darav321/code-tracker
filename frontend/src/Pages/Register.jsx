@@ -7,20 +7,25 @@ import { MdOutlineVisibility } from "react-icons/md";
 import { MdOutlineVisibilityOff } from "react-icons/md";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import axios from 'axios'
 import toast from "react-hot-toast";
+import { SiLeetcode } from "react-icons/si";
+import { SiGeeksforgeeks } from "react-icons/si";
 
 const Register = () => {
     const [data, setData] = useState({
       name : "",
       email : "",
-      password : ""
+      password : "",
+      leetcode_username : "",
+      gfg_username : "",
     })
     const [touched, setTouched] = useState({email : false, password : false})
     const [vis, setVis] = useState(false)
     const ref = useRef()
+    const navigate = useNavigate();
     const toggleVis = () => {
       if(!vis) {
         ref.current.type = "text"
@@ -50,6 +55,7 @@ const Register = () => {
         if(response.statusText === "OK")
         {
           toast.success("User registered successfully")
+          navigate("/home/profile")
         }
       } catch (error) {
         toast.error(error.response.data.message)
@@ -121,6 +127,39 @@ const Register = () => {
             error={touched.password && !data.password}
             helperText={touched.password && !data.password ? "Password is required..." : ""}
           />
+        </div>
+        <div className="flex items-center w-full justify-center mt-4 gap-2">
+          <div className="p-[0.5px] bg-slate-300 w-[30%] mt-4"></div>
+          <p className="mt-4 text-slate-700">Set Usernames</p>
+          <div className="p-[0.5px] bg-slate-300 w-[30%] mt-4"></div>
+        </div>
+        <div className="w-full flex gap-2">
+          <div className="w-full mt-6">
+            <TextField
+              label="Leetcode"
+              type="text"
+              name="leetcode_username"
+              value={data.leetcode_username}
+              onChange={handleOnChange}
+              InputProps={{
+                endAdornment : <InputAdornment position="end"><SiLeetcode size={22}/></InputAdornment>
+              }}
+              fullWidth
+            />
+          </div>
+          <div className="w-full mt-6">
+            <TextField
+              label="GFG"
+              type="text"
+              name="gfg_username"
+              value={data.gfg_username}
+              onChange={handleOnChange}
+              InputProps={{
+                endAdornment : <InputAdornment position="end"><SiGeeksforgeeks size={22}/></InputAdornment>
+              }}
+              fullWidth
+            />
+          </div>
         </div>
         <div onClick={handleOnSubmit} className="mt-7 w-full">
             <Button size="large" fullWidth type="submit" variant="contained"><p>Register</p></Button>

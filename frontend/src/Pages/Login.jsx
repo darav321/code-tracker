@@ -51,9 +51,10 @@ const Login = () => {
       try {
         e.preventDefault()
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/login`, data, {withCredentials : true})
-        console.log(response)
+        console.log(response.data.id)
         dispatch(setUser(response.data))
         toast.success(response.data.message)
+        navigate(`/home/dashboard/${response.data.id}`)
       } catch (error) {
         toast.error(error.response.data.message)
       }
